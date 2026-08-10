@@ -143,11 +143,11 @@ public class ComplaintService {
     }
 
     /**
-     * Get a single complaint by ID with all details
+     * Get a single complaint by ID with all details (using JOIN FETCH to avoid N+1)
      */
     @Transactional(readOnly = true)
     public Complaint getComplaintById(Long id) {
-        return complaintRepository.findById(id)
+        return complaintRepository.findByIdWithAttachmentsAndStatusUpdates(id)
                 .orElseThrow(() -> new IllegalArgumentException("Complaint not found: " + id));
     }
 
