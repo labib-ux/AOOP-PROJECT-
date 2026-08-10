@@ -13,7 +13,7 @@ import java.util.List;
 
 @Repository
 public interface ComplaintRepository extends JpaRepository<Complaint, Long> {
-    List<Complaint> findByCitizenId(Long citizenId);
+    org.springframework.data.domain.Page<Complaint> findByCitizenId(Long citizenId, org.springframework.data.domain.Pageable pageable);
     List<Complaint> findByWardId(Long wardId);
     List<Complaint> findByAssignedOfficerId(Long officerId);
     List<Complaint> findByAssignedDepartmentId(Long departmentId);
