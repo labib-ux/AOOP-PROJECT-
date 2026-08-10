@@ -4,12 +4,14 @@ import com.nagorikseba.dto.ComplaintDTO;
 import com.nagorikseba.dto.ComplaintResponseDTO;
 import com.nagorikseba.entity.Complaint;
 import com.nagorikseba.entity.User;
+import com.nagorikseba.enums.UserRole;
 import com.nagorikseba.repository.UserRepository;
 import com.nagorikseba.service.ComplaintService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
@@ -90,6 +92,35 @@ public class ComplaintController {
     @GetMapping("/{id}")
     public ResponseEntity<ComplaintResponseDTO> getComplaint(@PathVariable Long id) {
         Complaint complaint = complaintService.getComplaintById(id);
+        return ResponseEntity.ok(ComplaintResponseDTO.fromEntity(complaint));
+    }
+
+    /**
+     * Close a complaint with citizen rating
+     * POST /api/complaints/{id}/close
+     */
+    @PostMapping("/{id}/close")
+    public ResponseEntity<ComplaintResponseDTO> closeComplaint(
+            @PathVariable Long id,
+            @RequestParam("rating") Integer rating,
+            @RequestParam(value = "feedback", required = false) String feedback) {
+        
+        Complaint complaint = complaintService.closeComplaint(id, rating, feedback);
+        return ResponseEntity.ok(ComplaintResponseDTO.fromEntity(complaint));
+    }
+
+    /**
+     * Reopen a complaint (Citizen action)
+     * POST /api/complaints/{id}/reopen
+     */
+    @PostMapping("/{id}/reopen")
+    public ResponseEntity<ComplaintResponseDTO> reopenComplaint(
+            @PathVariable Long id,
+            @RequestParam("reason") String reason,
+            @AuthenticationPrincipal UserDetails userDetails) {
+        
+        User citizen = getUserFromUserDetails(userDetails);
+        Complaint complaint = complaintService.reopenComplaint(id, reason, citizen);
         return ResponseEntity.ok(ComplaintResponseDTO.fromEntity(complaint));
     }
 

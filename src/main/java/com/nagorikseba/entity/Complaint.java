@@ -75,7 +75,7 @@ public class Complaint {
 
     private LocalDateTime deadlineAt;
 
-    @Column(check = "rating BETWEEN 1 AND 5")
+    @Column(columnDefinition = "INTEGER CHECK (rating BETWEEN 1 AND 5)")
     private Integer rating;
 
     @Column(columnDefinition = "TEXT")
