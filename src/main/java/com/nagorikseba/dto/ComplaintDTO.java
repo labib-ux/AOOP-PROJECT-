@@ -2,33 +2,31 @@ package com.nagorikseba.dto;
 
 import com.nagorikseba.enums.ComplaintCategory;
 import com.nagorikseba.enums.Priority;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.math.BigDecimal;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class ComplaintDTO {
 
-    @NotBlank
     private String title;
-
-    @NotBlank
+    
     private String description;
-
-    @NotNull
+    
     private ComplaintCategory category;
-
+    
     private Priority priority;
-
-    private BigDecimal latitude;
-
-    private BigDecimal longitude;
-
+    
+    private Double latitude;
+    
+    private Double longitude;
+    
     private Long wardId;
+    
+    @Builder.Default
+    private List<MultipartFile> photos = List.of();
 }

@@ -10,15 +10,26 @@ frontend/dist/
 *.o
 *.obj
 *.out
-target/
+*.exe
+*.dll
+*.so
+*.a
 
 # Dependencies
-.m2/
+target/
 .gradle/
+.mypy_cache/
+.pytest_cache/
+node_modules/
+venv/
+.venv/
+__pycache__/
 
 # Logs and temp files
 *.log
 *.tmp
+*.swp
+*.swo
 
 # Environment
 .env
@@ -28,26 +39,37 @@ target/
 # Editors
 .vscode/
 .idea/
-*.swp
-*.swo
 
-# Coverage reports
+# System files
+.DS_Store
+Thumbs.db
+
+# Coverage
 coverage/
 htmlcov/
 .coverage
 
-# Package manager
-node_modules/
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-# IDE
-.classpath
-.project
-.settings/
-nbproject/
-*.swp
-*.swo
-*~
+# Archives
+*.zip
+*.gz
+*.tar
+*.tgz
+*.bz2
+*.xz
+*.7z
+*.rar
+*.zst
+*.lz4
+*.lzh
+*.cab
+*.arj
+*.rpm
+*.deb
+*.Z
+*.lz
+*.lzo
+*.tar.gz
+*.tar.bz2
+*.tar.xz
+*.tar.zst
 ```

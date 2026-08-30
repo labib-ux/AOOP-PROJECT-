@@ -2,5 +2,8 @@ package com.nagorikseba.enums;
 
 public enum FileType {
     IMAGE,
-    VIDEO
+    VIDEO,
+    AUDIO,
+    DOCUMENT,
+    OTHER
 }
