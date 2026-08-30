@@ -24,8 +24,10 @@ public class WardPerformance {
     @JsonIgnore
     private Ward ward;
 
+    @Column(name = "`month`")
     private Integer month;
 
+    @Column(name = "`year`")
     private Integer year;
 
     @Builder.Default

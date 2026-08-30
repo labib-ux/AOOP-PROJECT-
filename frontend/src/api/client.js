@@ -12,7 +12,12 @@ export async function apiRequest(path, options = {}) {
   });
 
   const text = await response.text();
-  const data = text ? JSON.parse(text) : null;
+  let data = null;
+  try {
+    data = text ? JSON.parse(text) : null;
+  } catch {
+    throw new Error(text || "Request failed");
+  }
 
   if (!response.ok) {
     const message = data?.error || data?.message || "Request failed";
