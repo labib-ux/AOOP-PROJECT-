@@ -10,10 +10,11 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ComplaintRepository extends JpaRepository<Complaint, Long> {
-    List<Complaint> findByCitizenId(Long citizenId);
+    org.springframework.data.domain.Page<Complaint> findByCitizenId(Long citizenId, org.springframework.data.domain.Pageable pageable);
     List<Complaint> findByWardId(Long wardId);
     List<Complaint> findByAssignedOfficerId(Long officerId);
     List<Complaint> findByAssignedDepartmentId(Long departmentId);
@@ -40,4 +41,7 @@ public interface ComplaintRepository extends JpaRepository<Complaint, Long> {
     
     @Query("SELECT AVG(c.rating) FROM Complaint c WHERE c.ward.id = :wardId AND c.rating IS NOT NULL")
     Double getAverageRatingByWard(@Param("wardId") Long wardId);
+    
+    @Query("SELECT c FROM Complaint c LEFT JOIN FETCH c.attachments LEFT JOIN FETCH c.statusUpdates WHERE c.id = :id")
+    Optional<Complaint> findByIdWithAttachmentsAndStatusUpdates(@Param("id") Long id);
 }
