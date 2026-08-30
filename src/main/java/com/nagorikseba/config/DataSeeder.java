@@ -1,8 +1,16 @@
 package com.nagorikseba.config;
 
-import com.nagorikseba.entity.*;
-import com.nagorikseba.enums.*;
-import com.nagorikseba.repository.*;
+import com.nagorikseba.entity.Department;
+import com.nagorikseba.entity.SLARule;
+import com.nagorikseba.entity.User;
+import com.nagorikseba.entity.Ward;
+import com.nagorikseba.enums.ComplaintCategory;
+import com.nagorikseba.enums.Priority;
+import com.nagorikseba.enums.UserRole;
+import com.nagorikseba.repository.DepartmentRepository;
+import com.nagorikseba.repository.SLARuleRepository;
+import com.nagorikseba.repository.UserRepository;
+import com.nagorikseba.repository.WardRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,7 +28,10 @@ public class DataSeeder {
                                    SLARuleRepository slaRuleRepository,
                                    PasswordEncoder passwordEncoder) {
         return args -> {
-            // Create Wards
+            if (userRepository.count() > 0) {
+                return;
+            }
+
             Ward ward1 = Ward.builder()
                     .wardNumber(1)
                     .areaName("Mohammadpur")
@@ -38,7 +49,6 @@ public class DataSeeder {
                     .build();
             wardRepository.saveAll(List.of(ward1, ward2, ward3));
 
-            // Create Admin User
             User admin = User.builder()
                     .fullName("System Administrator")
                     .email("admin@nagorikseba.com")
@@ -49,7 +59,6 @@ public class DataSeeder {
                     .build();
             userRepository.save(admin);
 
-            // Create Ward Councilors
             User councilor1 = User.builder()
                     .fullName("Abdul Rahman")
                     .email("councilor1@nagorikseba.com")
@@ -59,7 +68,6 @@ public class DataSeeder {
                     .ward(ward1)
                     .isActive(true)
                     .build();
-            
             User councilor2 = User.builder()
                     .fullName("Fatema Begum")
                     .email("councilor2@nagorikseba.com")
@@ -69,25 +77,14 @@ public class DataSeeder {
                     .ward(ward2)
                     .isActive(true)
                     .build();
-            
+            userRepository.saveAll(List.of(councilor1, councilor2));
             ward1.setCouncilor(councilor1);
             ward2.setCouncilor(councilor2);
             wardRepository.saveAll(List.of(ward1, ward2));
-            userRepository.saveAll(List.of(councilor1, councilor2));
 
-            // Create Department Officers
-            Department roadsDept = Department.builder()
-                    .name("ROADS")
-                    .ward(ward1)
-                    .build();
-            Department waterDept = Department.builder()
-                    .name("WATER_SUPPLY")
-                    .ward(ward1)
-                    .build();
-            Department electricityDept = Department.builder()
-                    .name("ELECTRICITY")
-                    .ward(ward2)
-                    .build();
+            Department roadsDept = Department.builder().name("ROADS").ward(ward1).build();
+            Department waterDept = Department.builder().name("WATER_SUPPLY").ward(ward1).build();
+            Department electricityDept = Department.builder().name("ELECTRICITY").ward(ward2).build();
             departmentRepository.saveAll(List.of(roadsDept, waterDept, electricityDept));
 
             User officer1 = User.builder()
@@ -100,7 +97,6 @@ public class DataSeeder {
                     .department(roadsDept)
                     .isActive(true)
                     .build();
-
             User officer2 = User.builder()
                     .fullName("Salma Khatun")
                     .email("officer2@nagorikseba.com")
@@ -113,7 +109,6 @@ public class DataSeeder {
                     .build();
             userRepository.saveAll(List.of(officer1, officer2));
 
-            // Create Demo Citizen
             User citizen = User.builder()
                     .fullName("Rahim Uddin")
                     .email("citizen@nagorikseba.com")
@@ -125,38 +120,12 @@ public class DataSeeder {
                     .build();
             userRepository.save(citizen);
 
-            // Create SLA Rules
-            SLARule sla1 = SLARule.builder()
-                    .category(ComplaintCategory.ROADS)
-                    .priority(Priority.NORMAL)
-                    .maxHours(72)
-                    .escalationLevel(1)
-                    .build();
-            SLARule sla2 = SLARule.builder()
-                    .category(ComplaintCategory.ROADS)
-                    .priority(Priority.HIGH)
-                    .maxHours(24)
-                    .escalationLevel(2)
-                    .build();
-            SLARule sla3 = SLARule.builder()
-                    .category(ComplaintCategory.WATER_SUPPLY)
-                    .priority(Priority.NORMAL)
-                    .maxHours(48)
-                    .escalationLevel(1)
-                    .build();
-            SLARule sla4 = SLARule.builder()
-                    .category(ComplaintCategory.ELECTRICITY)
-                    .priority(Priority.CRITICAL)
-                    .maxHours(6)
-                    .escalationLevel(3)
-                    .build();
-            slaRuleRepository.saveAll(List.of(sla1, sla2, sla3, sla4));
-
-            System.out.println("=== Database Seeded Successfully ===");
-            System.out.println("Admin: admin@nagorikseba.com / admin123");
-            System.out.println("Citizen: citizen@nagorikseba.com / citizen123");
-            System.out.println("Councilor: councilor1@nagorikseba.com / councilor123");
-            System.out.println("Officer: officer1@nagorikseba.com / officer123");
+            slaRuleRepository.saveAll(List.of(
+                    SLARule.builder().category(ComplaintCategory.ROADS).priority(Priority.NORMAL).maxHours(72).escalationLevel(1).build(),
+                    SLARule.builder().category(ComplaintCategory.ROADS).priority(Priority.HIGH).maxHours(24).escalationLevel(2).build(),
+                    SLARule.builder().category(ComplaintCategory.WATER_SUPPLY).priority(Priority.NORMAL).maxHours(48).escalationLevel(1).build(),
+                    SLARule.builder().category(ComplaintCategory.ELECTRICITY).priority(Priority.CRITICAL).maxHours(6).escalationLevel(3).build()
+            ));
         };
     }
 }

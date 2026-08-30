@@ -37,6 +37,7 @@ public class Attachment {
     @JsonIgnore
     private User uploadedBy;
 
+    @Builder.Default
     @Column(nullable = false)
     private Boolean isWorkProof = false;
 
@@ -45,6 +46,11 @@ public class Attachment {
 
     @PrePersist
     protected void onCreate() {
-        uploadedAt = LocalDateTime.now();
+        if (uploadedAt == null) {
+            uploadedAt = LocalDateTime.now();
+        }
+        if (isWorkProof == null) {
+            isWorkProof = false;
+        }
     }
 }

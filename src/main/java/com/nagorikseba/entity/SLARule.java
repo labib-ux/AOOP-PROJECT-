@@ -29,6 +29,7 @@ public class SLARule {
     @Column(nullable = false)
     private Integer maxHours;
 
+    @Builder.Default
     @Column(nullable = false)
     private Integer escalationLevel = 1;
 }

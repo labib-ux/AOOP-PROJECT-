@@ -35,6 +35,7 @@ public class Notification {
     @Column(nullable = false, length = 20)
     private NotificationChannel channel;
 
+    @Builder.Default
     @Column(nullable = false)
     private Boolean isRead = false;
 
@@ -43,6 +44,11 @@ public class Notification {
 
     @PrePersist
     protected void onCreate() {
-        sentAt = LocalDateTime.now();
+        if (sentAt == null) {
+            sentAt = LocalDateTime.now();
+        }
+        if (isRead == null) {
+            isRead = false;
+        }
     }
 }

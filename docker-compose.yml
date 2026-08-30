@@ -1,0 +1,15 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: nagorik-seba-db
+    environment:
+      POSTGRES_DB: nagorik_seba
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - nagorik_seba_data:/var/lib/postgresql/data
+
+volumes:
+  nagorik_seba_data:

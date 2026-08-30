@@ -1,11 +1,18 @@
 package com.nagorikseba.dto;
 
-import lombok.*;
+import jakarta.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class AuthRequest {
+
+    @NotBlank(message = "Email or phone is required")
     private String emailOrPhone;
+
+    @NotBlank(message = "Password is required")
     private String password;
 }

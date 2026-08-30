@@ -34,21 +34,18 @@ public class Ward {
     @JsonIgnore
     private User councilor;
 
+    @Builder.Default
     @OneToMany(mappedBy = "ward", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private List<Department> departments = new ArrayList<>();
 
-    @OneToMany(mappedBy = "ward", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    @OneToMany(mappedBy = "ward")
     @JsonIgnore
     private List<Complaint> complaints = new ArrayList<>();
 
-    public void addDepartment(Department department) {
-        departments.add(department);
-        department.setWard(this);
-    }
-
-    public void removeDepartment(Department department) {
-        departments.remove(department);
-        department.setWard(null);
-    }
+    @Builder.Default
+    @OneToMany(mappedBy = "ward")
+    @JsonIgnore
+    private List<WardPerformance> performances = new ArrayList<>();
 }

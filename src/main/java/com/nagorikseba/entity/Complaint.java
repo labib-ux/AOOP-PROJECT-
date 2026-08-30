@@ -7,6 +7,7 @@ import com.nagorikseba.enums.Priority;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,27 +35,29 @@ public class Complaint {
     @Column(nullable = false, length = 50)
     private ComplaintCategory category;
 
+    @Builder.Default
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 30)
     private ComplaintStatus status = ComplaintStatus.SUBMITTED;
 
+    @Builder.Default
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
     private Priority priority = Priority.NORMAL;
 
     @Column(precision = 10, scale = 8)
-    private Double latitude;
+    private BigDecimal latitude;
 
     @Column(precision = 11, scale = 8)
-    private Double longitude;
+    private BigDecimal longitude;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ward_id", nullable = false)
+    @JoinColumn(name = "ward_id")
     @JsonIgnore
     private Ward ward;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "citizen_id", nullable = false)
+    @JoinColumn(name = "citizen_id")
     @JsonIgnore
     private User citizen;
 
@@ -75,7 +78,6 @@ public class Complaint {
 
     private LocalDateTime deadlineAt;
 
-    @Column(check = "rating BETWEEN 1 AND 5")
     private Integer rating;
 
     @Column(columnDefinition = "TEXT")
@@ -84,20 +86,34 @@ public class Complaint {
     @Column(columnDefinition = "TEXT")
     private String reopenReason;
 
+    @Builder.Default
     @Column(nullable = false)
     private Integer reopenCount = 0;
 
+    @Builder.Default
     @OneToMany(mappedBy = "complaint", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private List<StatusUpdate> statusUpdates = new ArrayList<>();
 
+    @Builder.Default
     @OneToMany(mappedBy = "complaint", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private List<Attachment> attachments = new ArrayList<>();
 
     @PrePersist
     protected void onCreate() {
-        submittedAt = LocalDateTime.now();
+        if (submittedAt == null) {
+            submittedAt = LocalDateTime.now();
+        }
+        if (status == null) {
+            status = ComplaintStatus.SUBMITTED;
+        }
+        if (priority == null) {
+            priority = Priority.NORMAL;
+        }
+        if (reopenCount == null) {
+            reopenCount = 0;
+        }
     }
 
     public void addStatusUpdate(StatusUpdate update) {

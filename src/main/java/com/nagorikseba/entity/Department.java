@@ -28,17 +28,21 @@ public class Department {
     @JsonIgnore
     private Ward ward;
 
-    @OneToMany(mappedBy = "assignedDepartment", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Double officeLatitude;
+
+    private Double officeLongitude;
+
+    @Builder.Default
+    @OneToMany(mappedBy = "assignedDepartment")
     @JsonIgnore
     private List<Complaint> complaints = new ArrayList<>();
 
-    public void addComplaint(Complaint complaint) {
-        complaints.add(complaint);
-        complaint.setAssignedDepartment(this);
-    }
-
-    public void removeComplaint(Complaint complaint) {
-        complaints.remove(complaint);
-        complaint.setAssignedDepartment(null);
+    public int getActiveComplaintCount() {
+        if (complaints == null) {
+            return 0;
+        }
+        return (int) complaints.stream()
+                .filter(c -> c.getStatus() != null && !c.getStatus().name().equals("CLOSED"))
+                .count();
     }
 }

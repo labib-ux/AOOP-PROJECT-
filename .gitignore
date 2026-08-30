@@ -1,4 +1,10 @@
 ```
+# Uploads
+uploads/
+
+# Frontend build
+frontend/dist/
+
 # Compiled and build artifacts
 *.class
 *.o

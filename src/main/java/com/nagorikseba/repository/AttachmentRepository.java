@@ -9,5 +9,4 @@ import java.util.List;
 @Repository
 public interface AttachmentRepository extends JpaRepository<Attachment, Long> {
     List<Attachment> findByComplaintId(Long complaintId);
-    List<Attachment> findByComplaintIdAndIsWorkProofTrue(Long complaintId);
 }
